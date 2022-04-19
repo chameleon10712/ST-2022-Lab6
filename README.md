@@ -13,6 +13,7 @@ spec:
     - Global out-of-bounds read/write
     - Use-after-free
     - Use-after-return
+        - ASAN 要加 flag 才找得到
 
 <br />
 
