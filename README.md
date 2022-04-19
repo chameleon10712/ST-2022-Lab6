@@ -282,6 +282,71 @@ ans:
 
 
 
+    - Stack out-of-bounds read/write: yes
+
+        ```
+        $ gcc -fsanitize=address -o stack test2.c
+        $ ./stack
+
+        ==8191==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ffd3e5fb310 at pc 0x562cc0f74aff bp 0x7ffd3e5fb2c0 sp 0x7ffd3e5fb2b0
+        WRITE of size 4 at 0x7ffd3e5fb310 thread T0
+            #0 0x562cc0f74afe in main (/home/oceane/software-testing/part1/stack+0xafe)
+            #1 0x7ff6df83dc86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+            #2 0x562cc0f74899 in _start (/home/oceane/software-testing/part1/stack+0x899)
+
+        Address 0x7ffd3e5fb310 is located in stack of thread T0 at offset 64 in frame
+            #0 0x562cc0f74989 in main (/home/oceane/software-testing/part1/stack+0x989)
+
+          This frame has 2 object(s):
+            [32, 64) 'a' <== Memory access at offset 64 overflows this variable
+            [96, 128) 'b'
+        HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+              (longjmp and C++ exceptions *are* supported)
+        SUMMARY: AddressSanitizer: stack-buffer-overflow (/home/oceane/software-testing/part1/stack+0xafe) in main
+        Shadow bytes around the buggy address:
+          0x100027cb7610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7620: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7630: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7640: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7650: 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00
+        =>0x100027cb7660: 00 00[f2]f2 f2 f2 00 00 00 00 f3 f3 f3 f3 00 00
+          0x100027cb7670: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb7690: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb76a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x100027cb76b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        Shadow byte legend (one shadow byte represents 8 application bytes):
+          Addressable:           00
+          Partially addressable: 01 02 03 04 05 06 07 
+          Heap left redzone:       fa
+          Freed heap region:       fd
+          Stack left redzone:      f1
+          Stack mid redzone:       f2
+          Stack right redzone:     f3
+          Stack after return:      f5
+          Stack use after scope:   f8
+          Global redzone:          f9
+          Global init order:       f6
+          Poisoned by user:        f7
+          Container overflow:      fc
+          Array cookie:            ac
+          Intra object redzone:    bb
+          ASan internal:           fe
+          Left alloca redzone:     ca
+          Right alloca redzone:    cb
+        ==8191==ABORTING
+
+        ```
+
+
+    - Global out-of-bounds read/write
+
+
+
+
+
+
+
 
 
 
