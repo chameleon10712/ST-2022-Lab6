@@ -2,6 +2,22 @@
 Program Security Detect
 
 
+## Part 1
+
+spec:
+
+- 下面是常見的記憶體操作問題，請分別寫出有下列記憶體操作問題的簡單程式，並說明 Valgrind 和 ASan 能否找的出來
+
+    - Heap out-of-bounds read/write
+    - Stack out-of-bounds read/write
+    - Global out-of-bounds read/write
+    - Use-after-free
+    - Use-after-return
+
+
+
+<br />
+
 ## Part 2
 
 spec:
