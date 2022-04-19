@@ -254,15 +254,34 @@ ans:
 
 
 
+- ASAN
+
+    - Heap out-of-bounds read/write: yes
+    
+    
+        ```
+        $ gcc -fsanitize=address -o heap heap.c
+        $ ./heap
+
+        ASAN:DEADLYSIGNAL
+        =================================================================
+        ==8142==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x7fbaa9239461 bp 0x7fffaa8b7f10 sp 0x7fffaa8b7678 T0)
+        ==8142==The signal is caused by a READ memory access.
+        ==8142==Hint: address points to the zero page.
+            #0 0x7fbaa9239460  (/lib/x86_64-linux-gnu/libc.so.6+0x18e460)
+            #1 0x7fbaa9501ff5  (/usr/lib/x86_64-linux-gnu/libasan.so.4+0x65ff5)
+            #2 0x562a0e65e8e0 in main (/home/oceane/software-testing/part1/heap+0x8e0)
+            #3 0x7fbaa90ccc86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+            #4 0x562a0e65e7a9 in _start (/home/oceane/software-testing/part1/heap+0x7a9)
+
+        AddressSanitizer can not provide additional info.
+        SUMMARY: AddressSanitizer: SEGV (/lib/x86_64-linux-gnu/libc.so.6+0x18e460) 
+        ==8142==ABORTING
+
+        ```
 
 
 
-
-
-
-
-
-ASAN
 
 
 
