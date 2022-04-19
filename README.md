@@ -61,6 +61,66 @@ ans:
         ```
 
 
+    - Use-after-free: yes
+    
+        ```c
+        #include<stdlib.h>
+        #include<stdio.h>
+        #include<string.h>
+
+        int main(){
+            char *str = malloc(4);
+            str[3] = 'a';
+            free(str);
+            printf("%c\n", str[3]);
+            return 0;
+        }
+        ```
+
+
+        ```
+        $ gcc -o t4 test4.c
+        $ valgrind ./t4
+
+        ==7637== Memcheck, a memory error detector
+        ==7637== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+        ==7637== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+        ==7637== Command: ./t4
+        ==7637== 
+        ==7637== Invalid read of size 1
+        ==7637==    at 0x10870F: main (in /home/oceane/software-testing/part1/t4)
+        ==7637==  Address 0x522f043 is 3 bytes inside a block of size 4 free'd
+        ==7637==    at 0x4C32D3B: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==7637==    by 0x108706: main (in /home/oceane/software-testing/part1/t4)
+        ==7637==  Block was alloc'd at
+        ==7637==    at 0x4C31B0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==7637==    by 0x1086EB: main (in /home/oceane/software-testing/part1/t4)
+        ==7637== 
+        a
+        ==7637== 
+        ==7637== HEAP SUMMARY:
+        ==7637==     in use at exit: 0 bytes in 0 blocks
+        ==7637==   total heap usage: 2 allocs, 2 frees, 1,028 bytes allocated
+        ==7637== 
+        ==7637== All heap blocks were freed -- no leaks are possible
+        ==7637== 
+        ==7637== For counts of detected and suppressed errors, rerun with: -v
+        ==7637== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+        ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
