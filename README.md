@@ -210,9 +210,46 @@ ans:
 
         ```
 
+    - Use-after-return: no
 
+        ```c
+        #include<stdio.h>
 
+        // stack-use-after-return error
+        char* x;
 
+        void foo() {
+            char stack_buffer[42];
+            x = &stack_buffer[13];
+        }
+
+        int main() {
+
+            foo();
+            *x = 42; // Boom!
+
+            return 0;
+        }
+        ```
+
+        ```
+        $ valgrind ./use-after-return
+
+        ==8092== Memcheck, a memory error detector
+        ==8092== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+        ==8092== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+        ==8092== Command: ./use-after-return
+        ==8092== 
+        ==8092== 
+        ==8092== HEAP SUMMARY:
+        ==8092==     in use at exit: 0 bytes in 0 blocks
+        ==8092==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+        ==8092== 
+        ==8092== All heap blocks were freed -- no leaks are possible
+        ==8092== 
+        ==8092== For counts of detected and suppressed errors, rerun with: -v
+        ==8092== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+        ```
 
 
 
