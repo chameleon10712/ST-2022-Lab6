@@ -61,6 +61,48 @@ ans:
         ```
 
 
+    - Global out-of-bounds read/write: no
+
+        ```c
+        #include<stdlib.h>
+        #include<stdio.h>
+        #include<string.h>
+
+        int a[8] = {0};
+        int b[8] = {0};
+
+        int main(){
+            a[9] = 0;
+            return 0;
+        }
+        ```
+
+        ```
+        $ gcc -o global global.c
+        $ valgrind ./global
+
+
+        ==7768== Memcheck, a memory error detector
+        ==7768== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+        ==7768== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+        ==7768== Command: ./global
+        ==7768== 
+        ==7768== 
+        ==7768== HEAP SUMMARY:
+        ==7768==     in use at exit: 0 bytes in 0 blocks
+        ==7768==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+        ==7768== 
+        ==7768== All heap blocks were freed -- no leaks are possible
+        ==7768== 
+        ==7768== For counts of detected and suppressed errors, rerun with: -v
+        ==7768== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+        ```
+
+
+
+
+
     - Use-after-free: yes
     
         ```c
