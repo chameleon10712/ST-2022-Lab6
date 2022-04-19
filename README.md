@@ -390,7 +390,64 @@ ans:
 
         ```
 
+    - Use-after-free: yes
 
+        ```
+        $ gcc -fsanitize=address -o use-after-free test4.c
+        $ ./use-after-free
+
+        =================================================================
+        ==8252==ERROR: AddressSanitizer: heap-use-after-free on address 0x602000000013 at pc 0x5607059acad7 bp 0x7ffe768b7b70 sp 0x7ffe768b7b60
+        READ of size 1 at 0x602000000013 thread T0
+            #0 0x5607059acad6 in main (/home/oceane/software-testing/part1/use-after-free+0xad6)
+            #1 0x7efe7d9fec86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+            #2 0x5607059ac959 in _start (/home/oceane/software-testing/part1/use-after-free+0x959)
+
+        0x602000000013 is located 3 bytes inside of 4-byte region [0x602000000010,0x602000000014)
+        freed by thread T0 here:
+            #0 0x7efe7deac7a8 in __interceptor_free (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xde7a8)
+            #1 0x5607059aca9a in main (/home/oceane/software-testing/part1/use-after-free+0xa9a)
+            #2 0x7efe7d9fec86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+
+        previously allocated by thread T0 here:
+            #0 0x7efe7deacb40 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xdeb40)
+            #1 0x5607059aca4b in main (/home/oceane/software-testing/part1/use-after-free+0xa4b)
+            #2 0x7efe7d9fec86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+
+        SUMMARY: AddressSanitizer: heap-use-after-free (/home/oceane/software-testing/part1/use-after-free+0xad6) in main
+        Shadow bytes around the buggy address:
+          0x0c047fff7fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0c047fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0c047fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0c047fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0c047fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        =>0x0c047fff8000: fa fa[fd]fa fa fa fa fa fa fa fa fa fa fa fa fa
+          0x0c047fff8010: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+          0x0c047fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+          0x0c047fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+          0x0c047fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+          0x0c047fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+        Shadow byte legend (one shadow byte represents 8 application bytes):
+          Addressable:           00
+          Partially addressable: 01 02 03 04 05 06 07 
+          Heap left redzone:       fa
+          Freed heap region:       fd
+          Stack left redzone:      f1
+          Stack mid redzone:       f2
+          Stack right redzone:     f3
+          Stack after return:      f5
+          Stack use after scope:   f8
+          Global redzone:          f9
+          Global init order:       f6
+          Poisoned by user:        f7
+          Container overflow:      fc
+          Array cookie:            ac
+          Intra object redzone:    bb
+          ASan internal:           fe
+          Left alloca redzone:     ca
+          Right alloca redzone:    cb
+        ==8252==ABORTING
+        ```
 
 
 
