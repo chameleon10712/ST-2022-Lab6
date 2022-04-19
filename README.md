@@ -21,6 +21,64 @@ ans:
 
 - Valgrind
 
+    - Heap out-of-bounds read/write: yes
+    
+        ```c
+        #include<stdlib.h>
+        #include<stdio.h>
+        #include<string.h>
+        #define BUFSIZE 5
+
+        int main(int argc, char **argv) {
+            char *buf;
+            buf = (char *)malloc(sizeof(char)*BUFSIZE);
+            strcpy(buf, argv[1]);
+        }
+        ```
+
+        ```
+        $ gcc -o heap heap.c
+        $ valgrind ./heap helloworld
+
+        ==8014== Memcheck, a memory error detector
+        ==8014== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+        ==8014== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+        ==8014== Command: ./heap helloworld
+        ==8014== 
+        ==8014== Invalid write of size 1
+        ==8014==    at 0x4C34E00: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==8014==    by 0x1086C0: main (in /home/oceane/software-testing/part1/heap)
+        ==8014==  Address 0x522f045 is 0 bytes after a block of size 5 alloc'd
+        ==8014==    at 0x4C31B0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==8014==    by 0x1086A2: main (in /home/oceane/software-testing/part1/heap)
+        ==8014== 
+        ==8014== Invalid write of size 1
+        ==8014==    at 0x4C34E0D: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==8014==    by 0x1086C0: main (in /home/oceane/software-testing/part1/heap)
+        ==8014==  Address 0x522f04a is 5 bytes after a block of size 5 alloc'd
+        ==8014==    at 0x4C31B0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+        ==8014==    by 0x1086A2: main (in /home/oceane/software-testing/part1/heap)
+        ==8014== 
+        ==8014== 
+        ==8014== HEAP SUMMARY:
+        ==8014==     in use at exit: 5 bytes in 1 blocks
+        ==8014==   total heap usage: 1 allocs, 0 frees, 5 bytes allocated
+        ==8014== 
+        ==8014== LEAK SUMMARY:
+        ==8014==    definitely lost: 5 bytes in 1 blocks
+        ==8014==    indirectly lost: 0 bytes in 0 blocks
+        ==8014==      possibly lost: 0 bytes in 0 blocks
+        ==8014==    still reachable: 0 bytes in 0 blocks
+        ==8014==         suppressed: 0 bytes in 0 blocks
+        ==8014== Rerun with --leak-check=full to see details of leaked memory
+        ==8014== 
+        ==8014== For counts of detected and suppressed errors, rerun with: -v
+        ==8014== ERROR SUMMARY: 6 errors from 2 contexts (suppressed: 0 from 0)
+        ```
+
+
+
+
     - stack out-of-bounds r/w: no
 
         test2.c
