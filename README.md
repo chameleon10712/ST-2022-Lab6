@@ -451,7 +451,61 @@ ans:
 
 
 
+     - Use-after-return: yes
 
+        ```
+        $ export ASAN_OPTIONS=detect_stack_use_after_return=1
+        $ gcc -fsanitize=address -o use-after-return use-after-return.c
+        $ ./use-after-return
+
+        =================================================================
+        ==8310==ERROR: AddressSanitizer: stack-use-after-return on address 0x7fabf8b0002d at pc 0x55b6463dea5f bp 0x7ffe98074d00 sp 0x7ffe98074cf0
+        WRITE of size 1 at 0x7fabf8b0002d thread T0
+            #0 0x55b6463dea5e in main (/home/oceane/software-testing/part1/use-after-return+0xa5e)
+            #1 0x7fabfcb59c86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+            #2 0x55b6463de849 in _start (/home/oceane/software-testing/part1/use-after-return+0x849)
+
+        Address 0x7fabf8b0002d is located in stack of thread T0 at offset 45 in frame
+            #0 0x55b6463de939 in foo (/home/oceane/software-testing/part1/use-after-return+0x939)
+
+          This frame has 1 object(s):
+            [32, 74) 'stack_buffer' <== Memory access at offset 45 is inside this variable
+        HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+              (longjmp and C++ exceptions *are* supported)
+        SUMMARY: AddressSanitizer: stack-use-after-return (/home/oceane/software-testing/part1/use-after-return+0xa5e) in main
+        Shadow bytes around the buggy address:
+          0x0ff5ff157fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff157fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff157fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff157fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff157ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        =>0x0ff5ff158000: f5 f5 f5 f5 f5[f5]f5 f5 f5 f5 f5 f5 00 00 00 00
+          0x0ff5ff158010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff158020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff158030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff158040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ff5ff158050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        Shadow byte legend (one shadow byte represents 8 application bytes):
+          Addressable:           00
+          Partially addressable: 01 02 03 04 05 06 07 
+          Heap left redzone:       fa
+          Freed heap region:       fd
+          Stack left redzone:      f1
+          Stack mid redzone:       f2
+          Stack right redzone:     f3
+          Stack after return:      f5
+          Stack use after scope:   f8
+          Global redzone:          f9
+          Global init order:       f6
+          Poisoned by user:        f7
+          Container overflow:      fc
+          Array cookie:            ac
+          Intra object redzone:    bb
+          ASan internal:           fe
+          Left alloca redzone:     ca
+          Right alloca redzone:    cb
+        ==8310==ABORTING
+        ```
 
 
 
