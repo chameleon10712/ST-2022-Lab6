@@ -339,10 +339,56 @@ ans:
         ```
 
 
-    - Global out-of-bounds read/write
+    - Global out-of-bounds read/write: yes
 
+        ```
+        $ gcc -fsanitize=address -o global global.c
+        $ ./global
 
+        =================================================================
+        ==8213==ERROR: AddressSanitizer: global-buffer-overflow on address 0x55804e738104 at pc 0x55804e537a28 bp 0x7ffc64baeea0 sp 0x7ffc64baee90
+        WRITE of size 4 at 0x55804e738104 thread T0
+            #0 0x55804e537a27 in main (/home/oceane/software-testing/part1/global+0xa27)
+            #1 0x7f0ec3715c86 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21c86)
+            #2 0x55804e537909 in _start (/home/oceane/software-testing/part1/global+0x909)
 
+        0x55804e738104 is located 4 bytes to the right of global variable 'a' defined in 'global.c:5:5' (0x55804e7380e0) of size 32
+        0x55804e738104 is located 28 bytes to the left of global variable 'b' defined in 'global.c:6:5' (0x55804e738120) of size 32
+        SUMMARY: AddressSanitizer: global-buffer-overflow (/home/oceane/software-testing/part1/global+0xa27) in main
+        Shadow bytes around the buggy address:
+          0x0ab089cdefd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdefe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdeff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        =>0x0ab089cdf020:[f9]f9 f9 f9 00 00 00 00 f9 f9 f9 f9 00 00 00 00
+          0x0ab089cdf030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+          0x0ab089cdf070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        Shadow byte legend (one shadow byte represents 8 application bytes):
+          Addressable:           00
+          Partially addressable: 01 02 03 04 05 06 07 
+          Heap left redzone:       fa
+          Freed heap region:       fd
+          Stack left redzone:      f1
+          Stack mid redzone:       f2
+          Stack right redzone:     f3
+          Stack after return:      f5
+          Stack use after scope:   f8
+          Global redzone:          f9
+          Global init order:       f6
+          Poisoned by user:        f7
+          Container overflow:      fc
+          Array cookie:            ac
+          Intra object redzone:    bb
+          ASan internal:           fe
+          Left alloca redzone:     ca
+          Right alloca redzone:    cb
+        ==8213==ABORTING
+
+        ```
 
 
 
